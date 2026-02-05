@@ -191,7 +191,7 @@ export default function MemoForm({
                   }
                   preview="live"
                   hideToolbar={false}
-                  visibleDragBar={true}
+                  visibleDragbar={true}
                   height={400}
                   textareaProps={{
                     placeholder: '마크다운 형식으로 메모를 작성하세요...',

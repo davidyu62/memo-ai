@@ -38,7 +38,10 @@ export async function seedSampleData(): Promise<boolean> {
     updated_at: memo.updatedAt,
   }))
 
-  const { data, error } = await supabase.from('memos').insert(memosToInsert).select()
+  const { error } = await supabase
+    .from('memos')
+    // @ts-expect-error - Supabase 타입 정의 이슈로 인한 타입 에러
+    .insert(memosToInsert)
 
   if (error) {
     console.error('Error seeding data:', error)

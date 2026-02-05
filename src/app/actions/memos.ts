@@ -5,6 +5,17 @@ import { createServerClient } from '@/lib/supabase/server'
 import { Memo, MemoFormData } from '@/types/memo'
 import { v4 as uuidv4 } from 'uuid'
 
+// Supabase에서 반환되는 데이터 타입
+interface SupabaseMemoRow {
+  id: string
+  title: string
+  content: string
+  category: string
+  tags: string[] | null
+  created_at: string
+  updated_at: string
+}
+
 // 모든 메모 가져오기
 export async function getMemos(): Promise<Memo[]> {
   try {
@@ -27,7 +38,7 @@ export async function getMemos(): Promise<Memo[]> {
     }
 
     // Supabase에서 가져온 데이터를 Memo 타입으로 변환
-    return (data || []).map((row: any) => ({
+    return ((data as SupabaseMemoRow[]) || []).map((row) => ({
       id: row.id,
       title: row.title,
       content: row.content,
@@ -58,6 +69,7 @@ export async function createMemo(formData: MemoFormData): Promise<Memo> {
 
   const { data, error } = await supabase
     .from('memos')
+    // @ts-expect-error - Supabase 타입 정의 이슈로 인한 타입 에러
     .insert([newMemo])
     .select()
     .single()
@@ -69,14 +81,15 @@ export async function createMemo(formData: MemoFormData): Promise<Memo> {
 
   revalidatePath('/')
 
+  const row = data as SupabaseMemoRow
   return {
-    id: data.id,
-    title: data.title,
-    content: data.content,
-    category: data.category,
-    tags: data.tags || [],
-    createdAt: data.created_at,
-    updatedAt: data.updated_at,
+    id: row.id,
+    title: row.title,
+    content: row.content,
+    category: row.category,
+    tags: row.tags || [],
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
   }
 }
 
@@ -89,6 +102,7 @@ export async function updateMemo(
   
   const { data, error } = await supabase
     .from('memos')
+    // @ts-expect-error - Supabase 타입 정의 이슈로 인한 타입 에러
     .update({
       title: formData.title,
       content: formData.content,
@@ -107,14 +121,15 @@ export async function updateMemo(
 
   revalidatePath('/')
 
+  const row = data as SupabaseMemoRow
   return {
-    id: data.id,
-    title: data.title,
-    content: data.content,
-    category: data.category,
-    tags: data.tags || [],
-    createdAt: data.created_at,
-    updatedAt: data.updated_at,
+    id: row.id,
+    title: row.title,
+    content: row.content,
+    category: row.category,
+    tags: row.tags || [],
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
   }
 }
 
@@ -146,13 +161,14 @@ export async function getMemoById(id: string): Promise<Memo | null> {
     return null
   }
 
+  const row = data as SupabaseMemoRow
   return {
-    id: data.id,
-    title: data.title,
-    content: data.content,
-    category: data.category,
-    tags: data.tags || [],
-    createdAt: data.created_at,
-    updatedAt: data.updated_at,
+    id: row.id,
+    title: row.title,
+    content: row.content,
+    category: row.category,
+    tags: row.tags || [],
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
   }
 }

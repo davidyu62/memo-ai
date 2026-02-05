@@ -36,7 +36,7 @@ export default function MemoViewer({
       setSummary(null)
       setSummaryError(null)
     }
-  }, [memo?.id])
+  }, [memo])
 
   // 요약 생성 핸들러
   const handleSummarize = useCallback(async () => {
