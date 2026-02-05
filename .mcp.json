@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "playwright-mcp": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["@context7/mcp@latest"],
+      "env": {
+        "GEMINI_API_KEY": "AIzaSyBQMdU1x4uGMniGBBODvGmvo5CjTO-XDKw"
+      }
+    }
+  }
+}
